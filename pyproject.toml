@@ -1,0 +1,108 @@
+[project]
+name = "simple-oracle-mcp"
+version = "1.0.0"
+description = "Simple Oracle MCP Server - Enterprise-grade Oracle database access via Model Context Protocol"
+authors = [
+    {name = "alejandrogavilanes@gmail.com", email = "alejandrogavilanes@gmail.com"}
+]
+readme = "README.md"
+license = {text = "Proprietary"}
+requires-python = ">=3.10"
+keywords = ["oracle", "mcp", "database", "ai", "agentic", "agents"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+
+dependencies = [
+    "fastmcp>=0.1.0",
+    "oracledb>=1.4.0",
+    "python-dotenv>=1.0.0",
+    "pydantic>=2.0.0",
+    "structlog>=23.0.0",
+    "cryptography>=41.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.21.0",
+    "pytest-cov>=4.0.0",
+    "pytest-mock>=3.10.0",
+    "black>=23.0.0",
+    "isort>=5.12.0",
+    "flake8>=6.0.0",
+]
+
+security = [
+    "bandit>=1.7.0",
+    "safety>=2.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/alejandrogavilanes/simple-oracle-db-mcp"
+Repository = "https://github.com/alejandrogavilanes/simple-oracle-db-mcp.git"
+Documentation = "https://github.com/alejandrogavilanes/simple-oracle-db-mcp/blob/main/README.md"
+
+[project.scripts]
+oracle-mcp = "main:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["."]
+
+[tool.black]
+line-length = 88
+target-version = ['py39']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | build
+  | dist
+)/
+'''
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+line_length = 88
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts = "-ra -q --cov=. --cov-report=term --cov-report=html"
+testpaths = [
+    ".",
+]
+python_files = ["test_*.py", "*_test.py"]
+
+[tool.bandit]
+exclude_dirs = ["tests", "venv", ".venv"]
+skips = ["B101", "B601"]
+
+[tool.coverage.run]
+source = ["."]
+omit = [
+    "venv/*",
+    ".venv/*",
+    "test_*.py",
+    "*_test.py",
+]
+
+[dependency-groups]
+dev = [
+    "hypothesis>=6.148.8",
+]

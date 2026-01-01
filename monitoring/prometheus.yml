@@ -1,0 +1,28 @@
+# Prometheus configuration for Simple Oracle MCP Server monitoring
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+rule_files:
+  # - "first_rules.yml"
+  # - "second_rules.yml"
+
+scrape_configs:
+  # Oracle MCP Server health monitoring
+  - job_name: 'oracle-mcp-health'
+    static_configs:
+      - targets: ['oracle-mcp-dev:8000', 'oracle-mcp-staging:8000', 'oracle-mcp-prod:8000']
+    scrape_interval: 30s
+    metrics_path: /health
+    scheme: http
+
+  # Docker container metrics
+  - job_name: 'docker'
+    static_configs:
+      - targets: ['localhost:9323']
+    scrape_interval: 30s
+
+  # Prometheus self-monitoring
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']

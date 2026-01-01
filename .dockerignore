@@ -1,0 +1,79 @@
+# Git and version control
+.git
+.gitignore
+.gitlab-ci.yml
+
+# Python cache and virtual environments
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+.venv
+venv/
+.pytest_cache/
+.hypothesis/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Documentation and markdown files (except README)
+docs/
+*.md
+!README.md
+
+# Test files and coverage reports
+tests/
+htmlcov/
+.coverage
+.bandit
+
+# Log files (will be created in container)
+logs/
+*.log
+
+# Environment files (not used in containerized deployment)
+.env*
+!.env.template
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+
+# Temporary files
+tmp/
+temp/
+.tmp/
+
+# OS specific files
+.DS_Store
+Thumbs.db
+
+# Docker files (except the ones we need)
+docker-compose.override.yml
+Dockerfile.dev
+
+# Backup files
+*.backup
+*.bak
+
+# Lock files that might conflict
+# uv.lock - needed for Docker build
+# requirements.lock - needed for Docker build
+
+# Configuration files that shouldn't be in container
+renovate.json
+catalog-info.yaml
+
+# Security scan results
+.bandit
+safety-report.txt
+
+# Amazon Q and Kiro specific files
+.amazonq/
+.kiro/

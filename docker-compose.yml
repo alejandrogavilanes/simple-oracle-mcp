@@ -1,0 +1,137 @@
+services:
+  # Simple Oracle MCP Server - No environment-specific Oracle configuration
+  # Oracle credentials and connection details provided via MCP client environment variables
+  # This approach provides maximum flexibility for multi-environment usage
+  mcp-oracle-mcp:
+    build: .
+    container_name: simple-oracle-mcp
+    restart: unless-stopped
+    environment:
+      # Oracle connection configuration
+      - ORACLE_HOST=${ORACLE_HOST:-localhost}
+      - ORACLE_PORT=${ORACLE_PORT:-1521}
+      - ORACLE_SERVICE_NAME=${ORACLE_SERVICE_NAME:-test}
+      - ORACLE_USERNAME=${ORACLE_USERNAME:-test}
+      - ORACLE_PASSWORD=${ORACLE_PASSWORD:-test}
+      # Default/fallback values
+      - CONNECTION_TIMEOUT=30
+      - QUERY_TIMEOUT=300
+      - MAX_ROWS=1000
+      - DEPLOYMENT_MODE=generic
+      - MCP_CONFIG_SOURCE=environment
+    
+    volumes:
+      # Mount logs directory for persistent logging
+      - ./logs:/app/logs
+      
+      # Optional: Mount config directory for application configuration
+      - ./config:/app/config:ro
+    
+    # Health check - container is ready when it can accept MCP configuration
+    healthcheck:
+      test: ["CMD", "uv", "run", "python", "test_connection.py"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    
+    # Resource limits for generic container
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '1.0'
+        reservations:
+          memory: 512M
+          cpus: '0.5'
+    
+    # Network configuration
+    networks:
+      - oracle-mcp-network
+    
+    # Labels for container management
+    labels:
+      - "com.sim.mcp.service=oracle-mcp"
+      - "com.sim.mcp.deployment=generic"
+      - "com.sim.mcp.config-source=mcp-environment"
+      - "com.sim.mcp.version=1.0.0"
+
+  # Optional: Pre-configured Development Environment (for comparison/fallback)
+  oracle-mcp-dev-preconfigured:
+    build: .
+    container_name: oracle-mcp-dev-preconfigured
+    environment:
+      # Pre-configured development environment (traditional approach)
+      - ORACLE_HOST=oracle-dev.company.com
+      - ORACLE_PORT=1521
+      - ORACLE_SERVICE_NAME=DEV_SERVICE
+      - ORACLE_USERNAME=dev_user
+      - ORACLE_PASSWORD=dev_password
+      - CONNECTION_TIMEOUT=30
+      - QUERY_TIMEOUT=300
+      - MAX_ROWS=500
+      - DEPLOYMENT_MODE=preconfigured
+      - ENVIRONMENT=development
+    
+    volumes:
+      - ./logs:/app/logs
+      - ./config:/app/config:ro
+    
+    restart: unless-stopped
+    
+    healthcheck:
+      test: ["CMD", "uv", "run", "python", "test_connection.py"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+        reservations:
+          memory: 256M
+          cpus: '0.25'
+    
+    networks:
+      - oracle-mcp-network
+    
+    labels:
+      - "com.sim.mcp.service=simple-oracle-mcp"
+      - "com.sim.mcp.deployment=preconfigured"
+      - "com.sim.mcp.environment=development"
+      - "com.sim.mcp.version=1.0.0"
+    
+    # Only start when specifically requested (not default)
+    profiles:
+      - preconfigured
+
+  # Optional: Monitoring service for container health
+  oracle-mcp-monitor:
+    image: prom/prometheus:latest
+    container_name: oracle-mcp-monitor
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    networks:
+      - oracle-mcp-network
+    profiles:
+      - monitoring
+    labels:
+      - "com.sim.mcp.service=monitoring"
+      - "com.sim.mcp.component=prometheus"
+
+networks:
+  oracle-mcp-network:
+    driver: bridge
+    labels:
+      - "com.sim.mcp.network=oracle-mcp"
+
+volumes:
+  oracle-mcp-logs:
+    driver: local
+    labels:
+      - "com.sim.mcp.volume=logs"

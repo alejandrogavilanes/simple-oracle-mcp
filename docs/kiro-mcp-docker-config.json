@@ -1,0 +1,56 @@
+{
+  "mcpServers": {
+    "simple-oracle-dev": {
+      "command": "docker",
+      "args": [
+        "run", "--rm", "-i", "--name", "simple-oracle-mcp-temp", 
+        "-e", "ORACLE_HOST=host_name",
+        "-e", "ORACLE_PORT=1539", 
+        "-e", "ORACLE_SERVICE_NAME=service_name",
+        "-e", "ORACLE_USERNAME=login",
+        "-e", "ORACLE_PASSWORD=secure_password",
+        "-e", "MAX_ROWS=500",
+        "simple-oracle-mcp", 
+        "uv", "run", "python", "main.py"
+      ],
+      "disabled": false,
+      "autoApprove": ["describe_table"]
+    },
+    "simple-oracle-staging": {
+      "command": "docker",
+      "args": [
+        "run", "--rm", "-i", "--name", "simple-oracle-mcp-stag-temp",
+        "-e", "ORACLE_HOST=oracle-staging.company.com",
+        "-e", "ORACLE_PORT=1521",
+        "-e", "ORACLE_SERVICE_NAME=STAGING_SERVICE",
+        "-e", "ORACLE_USERNAME=staging_user",
+        "-e", "ORACLE_PASSWORD=staging_password",
+        "-e", "CONNECTION_TIMEOUT=30",
+        "-e", "QUERY_TIMEOUT=300",
+        "-e", "MAX_ROWS=1000",
+        "simple-oracle-mcp",
+        "uv", "run", "python", "main.py"
+      ],
+      "disabled": false,
+      "autoApprove": []
+    },
+    "simple-oracle-prod": {
+      "command": "docker",
+      "args": [
+        "run", "--rm", "-i", "--name", "simple-oracle-mcp-prod-temp",
+        "-e", "ORACLE_HOST=oracle-prod.company.com",
+        "-e", "ORACLE_PORT=1521",
+        "-e", "ORACLE_SERVICE_NAME=PROD_SERVICE",
+        "-e", "ORACLE_USERNAME=readonly_user",
+        "-e", "ORACLE_PASSWORD=secure_production_password",
+        "-e", "CONNECTION_TIMEOUT=30",
+        "-e", "QUERY_TIMEOUT=300",
+        "-e", "MAX_ROWS=1000",
+        "simple-oracle-mcp",
+        "uv", "run", "python", "main.py"
+      ],
+      "disabled": false,
+      "autoApprove": []
+    }
+  }
+}
