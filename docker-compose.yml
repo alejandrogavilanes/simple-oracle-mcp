@@ -2,7 +2,7 @@ services:
   # Simple Oracle MCP Server - No environment-specific Oracle configuration
   # Oracle credentials and connection details provided via MCP client environment variables
   # This approach provides maximum flexibility for multi-environment usage
-  mcp-oracle-mcp:
+  simple-oracle-mcp:
     build: .
     container_name: simple-oracle-mcp
     restart: unless-stopped

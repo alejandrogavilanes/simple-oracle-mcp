@@ -1,0 +1,24 @@
+{
+  "mcpServers": {
+    "oracle-analytics": {
+      "command": "docker",
+      "args": [
+        "run", "--rm", "-i", "--name", "oracle-mcp-cursor",
+        "-e", "ORACLE_HOST=your-oracle-host.company.com",
+        "-e", "ORACLE_PORT=1521",
+        "-e", "ORACLE_SERVICE_NAME=YOUR_SERVICE",
+        "-e", "ORACLE_USERNAME=cursor_readonly",
+        "-e", "ORACLE_PASSWORD=your_secure_password",
+        "-e", "MAX_ROWS=1000",
+        "-e", "CONNECTION_TIMEOUT=30",
+        "-e", "QUERY_TIMEOUT=300",
+        "-e", "LOG_LEVEL=INFO",
+        "simple-oracle-mcp",
+        "uv", "run", "python", "main.py"
+      ],
+      "disabled": false,
+      "autoApprove": ["describe_table"],
+      "description": "Oracle database access for AI-powered analytics"
+    }
+  }
+}

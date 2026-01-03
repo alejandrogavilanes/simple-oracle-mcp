@@ -1,0 +1,20 @@
+{
+  "mcpServers": {
+    "oracle-database": {
+      "command": "docker",
+      "args": [
+        "run", "--rm", "-i", "--name", "oracle-mcp-claude",
+        "-e", "ORACLE_HOST=your-oracle-host.company.com",
+        "-e", "ORACLE_PORT=1521",
+        "-e", "ORACLE_SERVICE_NAME=YOUR_SERVICE",
+        "-e", "ORACLE_USERNAME=claude_readonly",
+        "-e", "ORACLE_PASSWORD=your_secure_password",
+        "-e", "MAX_ROWS=1000",
+        "-e", "CONNECTION_TIMEOUT=30",
+        "-e", "QUERY_TIMEOUT=300",
+        "simple-oracle-mcp",
+        "uv", "run", "python", "main.py"
+      ]
+    }
+  }
+}
