@@ -26,7 +26,11 @@ dependencies = [
     "pydantic>=2.0.0",
     "structlog>=23.0.0",
     "cryptography>=41.0.0",
-    "urllib3>=2.6.3",
+    "urllib3>=2.6.0",
+    "requests>=2.32.4",
+    "flask-cors>=6.0.0",
+    "werkzeug>=3.1.4",
+    "mcp>=1.23.0",
 ]
 
 [project.optional-dependencies]
@@ -84,7 +88,7 @@ line_length = 88
 
 [tool.pytest.ini_options]
 minversion = "7.0"
-addopts = "-ra -q --cov=. --cov-report=term --cov-report=html"
+addopts = "-ra -q"
 testpaths = [
     ".",
 ]

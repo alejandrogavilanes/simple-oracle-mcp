@@ -859,9 +859,15 @@ async def query_oracle(query: str, limit: int = 100, ctx: Context = None) -> str
         if ctx:
             ctx.info("Security validation passed, applying row limit")
         
-        # Apply row limit (preserved)
+        # Apply row limit (preserved) - with input validation for security
         limit = min(limit, db_config.max_rows)
+        
+        # Validate limit is a positive integer to prevent SQL injection
+        if not isinstance(limit, int) or limit < 0:
+            raise ValueError(f"Invalid limit value: {limit}. Must be a non-negative integer.")
+        
         if 'ROWNUM' not in query.upper() and limit > 0:
+            # Safe to use f-string here since limit is validated as integer
             query = f"SELECT * FROM ({query}) WHERE ROWNUM <= {limit}"
         
         if ctx:
